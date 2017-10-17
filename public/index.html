@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Notification App</title>
+    <style>
+      body {
+        /*background: #000;*/
+      }
+      .notifications-icon {
+        position: relative;
+        height: 120px;
+        width: 150px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .bell-image {
+        height: 100px;
+        width: 100px;
+      }
+      .fire-image {
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100px;
+        width: 100px;
+      }
+      .badge {
+        position: absolute;
+        bottom: 40px;
+        right: 20px;
+        height: 50px;
+        width: 50px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #336A98;
+        color: #fff;
+      }
+    </style>
+
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+
+    <div id="react-root"></div>
+
+    
+
+    <script>
+      const hasFire = () =>
+        Boolean(document.querySelector('.fire-image'));
+      
+      const addFire = () => {
+        const node = document.createElement("img"); 
+        node.src = "https://reactblogassets-wrwvtkwdsf.now.sh/fire.png";
+        node.className = "fire-image";
+        document
+          .querySelector(".notifications-icon")
+          .appendChild(node);
+      };
+
+      const removeFire = () =>
+        document.querySelector('.fire-image').remove();
+
+      const addBadge = () => {
+        const node = document.createElement("span"); 
+        node.className = "badge";
+        document
+          .querySelector(".notifications-icon")
+          .appendChild(node);
+      };
+
+      const getBadge = () => 
+        document.querySelector('.badge');
+
+      const hasBadge = () =>
+        Boolean(getBadge());
+
+      const removeBadge = () =>
+        getBadge().remove();
+
+      const renderNotificationIcon = (count) => {
+        if (count > 99) {
+          if (!hasFire()) { 
+            addFire(); 
+          }
+        } else {
+          if (hasFire()) { 
+            removeFire(); 
+          }
+        }
+
+        if (count === 0) {
+          if (hasBadge()) { 
+            removeBadge(); 
+          }
+          return;
+        }
+
+        if (!hasBadge()) { 
+          addBadge(); 
+        }
+
+        const text = count > 99 ? '99+' : count.toString();
+        getBadge().innerText = text;
+      };
+
+      renderNotificationIcon(50);
+
+      // setInterval(() => {
+      //   const max = 150;
+      //   const min = 0;
+      //   const count = Math.round( Math.random() * (max - min) + min );
+      //   renderNotificationIcon(count);
+      // }, 1000);
+
+    </script>
+  </body>
+</html>
