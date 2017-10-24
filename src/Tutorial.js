@@ -6,45 +6,67 @@ class Tutorial extends Component {
     return (
       <div>
         <h1>Representation is the essence of programming</h1>
-        <p>Let me give you some background on web development and why I believe React is the best tool to represent (and therefore program) user interfaces, hence UI.</p>
-        <p>I will show you developing UI works on the web and how by default we lack a suitablle ability to represent dynamic UI.</p>
-        <p>First, lets take a step back from UI and think about how we might get some coffee from a barrista.</p>
-        <p>One method would be to declare what we want, another way would to issue imperatives so we could control what the barrista does</p>
+        <p>As web developers, we want the ability to update a web page (document) for each state of our application, e.g., when a user types something into a search box, we might update the page with a loading indicator and then update the page with the search results.</p>
+        <p>When a web page is loaded, the browser creates the Document Object Model (often referred to as the DOM) which represents the entire document as Javascript object. To make updates to the page we must make updates to the properties of the document object.</p>
+        
+        <p>By using the document object directly, we must program like a control freak and issue imperatives (i.e., commands) for every update we want.</p>
 
-        <p>Declarative Order - "I would like a flat white with two sugars"</p>
-        <p>Imperative Order</p>
+        <p>React is a Javascript library which gives us a declarative model of programming, where we only represent the document we want, instead of issuing commands.</p>
+
+        <p>Let's take a step back from the web for a moment, and contrast the declarative and imperative approaches.</p>
+        <p>Imagine we're at a cafe and ordering a coffee from a barista.</p>
+
+        <p>Imperative Order - (Control what the barista does)</p>
         <ol>
-          <li>Walk three steps to your left to the expresso machine</li>
-          <li>If the expresso machine is not turned on turn it on</li>
+          <li>Walk three steps left to the espresso machine</li>
+          <li>If the espresso machine is off, turn it on</li>
           <li>Grind the coffee beans</li>
-          <li>If you don't have any barrista milk go and buy some</li>
-          <li>Combine the milk with the coffee in a cup</li>
-          <li>Add two sugars and mix it</li>
-          <li>Pour it into a cup</li>
+          <li>If trim milk is not available, go and buy some</li>
+          <li>Combine the trim milk with the coffee in a cup</li>
           <li>Bring me the cup!</li>
         </ol>
-        <p>Now imagine if the waiter only spoke Javascript</p>
-        <p>Declarative Code - (what represent what you want)</p>
-        <pre>{`[{ingredient: "milk"}, {ingredient: "sugar"}]`}</pre>
+        <p>Declarative Order - (Specify what we want)</p>
+        <ol>
+          <li>"I would like a flat white with trim milk"</li>
+        </ol>
+        <p>Now imagine if the barista only spoke Javascript</p>
         <p>Imperative Code - (how to do it)</p>
-        <pre>{`barrista.walk(4, '90deg');`}</pre>
+        <pre>{`
+          barista.walk(4, '90deg');
+          if(! barista.detectMachineOn()) {
+            barista.turnOnMachine();
+          }
+          barista.grindCoffee();
+          if(! barista.detectsMilk('trim')) {
+            barista.buyMilk('trim');
+          }
+          barrista.walk(4, '180deg');
+        `}</pre>
+        <p>Declarative Code - (Represent what you want)</p>
+        <pre>{`[{ingredient: "milk"}, {ingredient: "coffee"}]`}</pre>
         <img style={{height: 300, width: 300}} src="/tutorial/declarativeUIAnalogy.jpg" alt="describe order with JS objects" />
+        <p>The key insight is that you get the same outcome with imperative or declarative programming, however with declarative programming, <strong>you surrender control.</strong></p>
 
-        <h2>Building interfaces with a browser</h2>
-        <p>When the web began user interfaces were static and were completely determined by the HTML string returned by a server.</p>
+        <h2>HTML is declarative</h2>
+        <img style={{display: 'block', height: 300, width: 500}} alt="HTML Hello World" src="/tutorial/html.png" />
+
+        <p>To load a web page, browsers parse the HTML text returned from a server. Notice there are no commands issued to determine how the page is loaded, we just describe the page we want with HTML.</p>
 
         <img style={{display: 'block', height: 300, width: 500}} alt="HTML Hello World" src="/tutorial/HTMLHelloWorld.png" />
         <img alt="HTML Hello UI" src="/tutorial/helloWorldBrowser.png" />
 
-        <p>Javascript was introduced to allow programmers to be able to update a web page (document) and make it interactive. We are given a document object we could use to make updates to the webpage.</p>
-        <p>To make updates we have to issue commands with the document object and we lost the ability to represent the UI we wanted, which made development complex.</p>
+        <h2>DOM is imperative</h2>
+
+        <p>Let's take a look at the document object</p>
+
         <p>In the video below I log the document object and show how you can use it to update the web page. Note that console.log shows a string representation of the document whereas console.dir shows it as an object.</p>
-        <p><strong>Notice how we use the className property instead of class with dom elements. This is because a dom element is a javascript object and class is a reserved keyword</strong></p>
+        <p>Notice how the h1 element has a className property (as opposed to class property that HTML uses). Remember, <strong>dom elements are javascript objects</strong> and class is a reserved keyword</p>
 
         <video style={{height: 500, width: 500}} controls={true}>
           <source type="video/mp4" src="/tutorial/interactingWithTheDOM.mov" />
         </video>
 
+        <h3>Imperative vs Declarative in action</h3>
 
         <p>Imagine you are building an notifications app which has three states.</p>
         <ol>
@@ -55,24 +77,37 @@ class Tutorial extends Component {
 
         <img style={{height: 300, width: 400}} src="/tutorial/notificationStates.png" alt="notification states" />
 
-        <p>To handle our use cases on the server return the appropriate HTML with a condition for each use case.</p>
+        <h2>Server side, so pure</h2>
 
+        <p>Notice how we only need condition for each use case. In programming we say that a function is pure when where the return value is only determined by its input values. <pre>{`makeNotificationsHTML`}</pre> is pure as the HTML string it returns is determined solely by the count argument. This makes it really easy to test, we simply can call the function with a count and assert that we got the HTML we expect.</p>
+
+        <pre>{`expect(makeNotificationsHTML(0)).toEqual('div class="notifications-icon"></div>')`}</pre>
+          
         <img style={{height: 400, width: 500}} src="/tutorial/handleNotificationsUseCaseOnTheServer.png" alt="notification server" />
 
-        <p>However, if users want to see their notification UI update without refreshing the page we will need to use JS to update the UI using the document object.</p>
+        <h2>In the browser</h2>
 
-        <p>Because we are working with an existing web page we need to be able to handle transitioning between all of our use cases</p>
+        <p>If users want to see their notifications display update without refreshing the page we will have to update the DOM.</p>
 
-        <p>For example, if they start with no notfication when one arrives we need to send a command to add a badge, if they get to 100 then add fire and then remove the badge etc</p>
+        <p>On the server we have the luxury of starting fresh and return new html text for every request.</p>
+
+        <p>However, in the browser we already have an existing document so our code needs to be able to exectute the right commands to transition between all of our use cases.</p>
+
+        <p>For example, if they start with no notfication when one arrives we need to send a command to add a badge, and if they get to 100 then add fire and then remove the badge etc</p>
 
         <img style={{height: 400, width: 500}} src="/tutorial/modellingTransitions.png" alt="modelling transitions" />
 
-        <img style={{height: 400, width: 500}} src="/tutorial/commandNotifications.png" alt="command" />
-        
-        <p>With React we can get back modelling UI per use case</p>
+        <p>See below how the imperative code causes complexity to rise exponentially. Notice <pre>{`renderNotificationIcon`}</pre> doesn't return a value so we can't test the update function. Also it relies on the existing document, not just the count argument so it is impure.</p>
 
-        <img style={{height: 400, width: 500}} src="/tutorial/creactJSXStyle.png" alt="jsx style" />
+        <img style={{height: 400, width: 500}} src="/tutorial/commandNotifications.png" alt="command" />
+
+        <h2>React to the rescue</h2>
+        <p>With React we write declarative code and just like on the server we only need one condition use case</p>
+
+        <img style={{height: 400, width: 500}} src="/tutorial/reactJSXStyle.png" alt="jsx style" />
         
+        <p></p>
+
         <p>How can we write "HTML" tags in Javascript? It gets transformed into function calls and those functions return objects that represent the dom nodes you want <a href="https://reactjs.org/docs/introducing-jsx.html#jsx-represents-objects">JSX Represents objects</a></p>
         
         <img style={{height: 400, width: 900}} src="/tutorial/babel.png" alt="babel" />
