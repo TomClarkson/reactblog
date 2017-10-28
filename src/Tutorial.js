@@ -6,15 +6,27 @@ class Tutorial extends Component {
     return (
       <div>
         <h1>Representation is the essence of programming</h1>
-        <p>As web developers, we want the ability to update a web page (document) for each state of our application, e.g., when a user types something into a search box, we might update the page with a loading indicator and then update the page with the search results.</p>
-        <p>When a web page is loaded, the browser creates the Document Object Model (often referred to as the DOM) which represents the entire document as Javascript object. To make updates to the page we must make updates to the properties of the document object.</p>
+        <p>As web developers, we want the ability to update a web page (document) for each state of our application, 
+        e.g., when a user types something into a search box, we might update the document with a loading indicator and later update the document with the search results.
+        </p>
+        <p>When a browser loads a page it gives us a document object, which is a Javascript representation of the entire document.
+        To update the page we need to update the properties of the document object.
+        </p>
         
-        <p>By using the document object directly, we must program like a control freak and issue imperatives (i.e., commands) for every update we want.</p>
+        <p>However, by using the document object directly, we must program like a control freak and issue imperatives (i.e., commands) for every update we want.</p>
 
-        <p>React is a Javascript library which gives us a declarative model of programming, where we only represent the document we want, instead of issuing commands.</p>
+        <p>React is a Javascript library which gives us a declarative model of programming, where we don't issue any update commands, instead we just represent the document we want for each state.
+            React handles all of the document update commands on our behalf.
+        </p>
+
+        <h2>Imperative vs Declarative</h2>
 
         <p>Let's take a step back from the web for a moment, and contrast the declarative and imperative approaches.</p>
         <p>Imagine we're at a cafe and ordering a coffee from a barista.</p>
+
+        <img alt="barista" style={{height: 300, width: 400}} src="/tutorial/barista.png" alt="notification states" />
+
+        <img alt="barista" style={{height: 300, width: 400}} src="/tutorial/coffee.png" alt="notification states" />
 
         <p>Imperative Order - (Control what the barista does)</p>
         <ol>
@@ -29,25 +41,27 @@ class Tutorial extends Component {
         <ol>
           <li>"I would like a flat white with trim milk"</li>
         </ol>
-        <p>Now imagine if the barista only spoke Javascript</p>
+        <p>Now imagine if the barista doesn't speak English, only Javascript</p>
         <p>Imperative Code - (how to do it)</p>
         <pre>{`
           barista.walk(4, '90deg');
           if(! barista.detectMachineOn()) {
             barista.turnOnMachine();
           }
-          barista.grindCoffee();
-          if(! barista.detectsMilk('trim')) {
-            barista.buyMilk('trim');
+          const coffee = barista.grindCoffee();
+          let milk = barista.getMilkFromCupboard('trim');
+          if(! milk) {
+            milk = barista.buyMilk('trim');
           }
-          barrista.walk(4, '180deg');
+          barista.combineIntoCup(coffee, milk);
+          barrista.walkWithCup(4, '180deg');
         `}</pre>
         <p>Declarative Code - (Represent what you want)</p>
-        <pre>{`[{ingredient: "milk"}, {ingredient: "coffee"}]`}</pre>
+        <pre>{`[{ingredient: "milk", type: "trim"}, {ingredient: "coffee"}]`}</pre>
         <img style={{height: 300, width: 300}} src="/tutorial/declarativeUIAnalogy.jpg" alt="describe order with JS objects" />
         <p>The key insight is that you get the same outcome with imperative or declarative programming, however with declarative programming, <strong>you surrender control.</strong></p>
 
-        <h2>HTML is declarative</h2>
+        <h2>Programming with HTML is declarative</h2>
         <img style={{display: 'block', height: 300, width: 500}} alt="HTML Hello World" src="/tutorial/html.png" />
 
         <p>To load a web page, browsers parse the HTML text returned from a server. Notice there are no commands issued to determine how the page is loaded, we just describe the page we want with HTML.</p>
@@ -55,7 +69,7 @@ class Tutorial extends Component {
         <img style={{display: 'block', height: 300, width: 500}} alt="HTML Hello World" src="/tutorial/HTMLHelloWorld.png" />
         <img alt="HTML Hello UI" src="/tutorial/helloWorldBrowser.png" />
 
-        <h2>DOM is imperative</h2>
+        <h2>Programming with the document is imperative</h2>
 
         <p>Let's take a look at the document object</p>
 
@@ -66,7 +80,7 @@ class Tutorial extends Component {
           <source type="video/mp4" src="/tutorial/interactingWithTheDOM.mov" />
         </video>
 
-        <h3>Imperative vs Declarative in action</h3>
+        <h2>Imperative vs Declarative in action</h2>
 
         <p>Imagine you are building an notifications app which has three states.</p>
         <ol>
@@ -77,14 +91,21 @@ class Tutorial extends Component {
 
         <img style={{height: 300, width: 400}} src="/tutorial/notificationStates.png" alt="notification states" />
 
-        <h2>Server side, so pure</h2>
+        <h2>Rendering Server side is so pure</h2>
 
-        <p>Notice how we only need condition for each use case. In programming we say that a function is pure when where the return value is only determined by its input values. <pre>{`makeNotificationsHTML`}</pre> is pure as the HTML string it returns is determined solely by the count argument. This makes it really easy to test, we simply can call the function with a count and assert that we got the HTML we expect.</p>
+        <pre>{`(data) => "<html..."`}</pre>
+
+        <p>You can reason about server side rendering as a function that takes data from our database and returns the html representation of our document</p>
+
+        <img style={{height: 400, width: 500}} src="/tutorial/handleNotificationsUseCaseOnTheServer.png" alt="notification server" />
+
+        <p>Notice how we only need condition for each use case. 
+        In programming we say that a function is pure when where the return value is only determined by its input values. 
+        <pre>{`makeNotificationsHTML`}</pre> is pure as the HTML string it returns is determined solely by the count argument. 
+        This makes it really easy to test, we simply can call the function with a count and assert that we got the HTML we expect.</p>
 
         <pre>{`expect(makeNotificationsHTML(0)).toEqual('div class="notifications-icon"></div>')`}</pre>
           
-        <img style={{height: 400, width: 500}} src="/tutorial/handleNotificationsUseCaseOnTheServer.png" alt="notification server" />
-
         <h2>In the browser</h2>
 
         <p>If users want to see their notifications display update without refreshing the page we will have to update the DOM.</p>
